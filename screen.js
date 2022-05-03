@@ -1,3 +1,4 @@
+
 var isNumeric = false;
 var keyLayout = [
             "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace",
@@ -6,7 +7,11 @@ var keyLayout = [
             "done", "z", "x", "c", "v", "b", "n", "m", ",", ".", "?",
             "space"
         ];
+
+
+;
 Keyboard = {
+
     elements: {
         main: null,
         keysContainer: null,
@@ -22,24 +27,26 @@ Keyboard = {
         value: "",
         capsLock: false
     },
+    elementInFocus: null,
 
+    refreshButton() {
+        // Create main elements
+        this.elements.main = document.createElement("div");
+        this.elements.keysContainer = document.createElement("div");
+
+        // Setup main elements
+        this.elements.main.classList.add("keyboard", "keyboard--hidden");
+        this.elements.keysContainer.classList.add("keyboard__keys");
+        this.elements.keysContainer.appendChild(this._createKeys());
+
+        this.elements.keys = this.elements.keysContainer.querySelectorAll(".keyboard__key");
+
+        // Add to DOM
+        this.elements.main.appendChild(this.elements.keysContainer);
+        document.body.appendChild(this.elements.main);
+    },
     init(isSecond=false) {
-        if(!isSecond) {
-            // Create main elements
-            this.elements.main = document.createElement("div");
-            this.elements.keysContainer = document.createElement("div");
-
-            // Setup main elements
-            this.elements.main.classList.add("keyboard", "keyboard--hidden");
-            this.elements.keysContainer.classList.add("keyboard__keys");
-            this.elements.keysContainer.appendChild(this._createKeys());
-
-            this.elements.keys = this.elements.keysContainer.querySelectorAll(".keyboard__key");
-
-            // Add to DOM
-            this.elements.main.appendChild(this.elements.keysContainer);
-            document.body.appendChild(this.elements.main);
-        }
+        this.refreshButton();
         // Automatically use keyboard for elements with .use-keyboard-input
         document.querySelectorAll(".use-keyboard-input").forEach(element => {
             element.addEventListener("focus", () => {
@@ -49,6 +56,9 @@ Keyboard = {
                 }catch(e) {
                     console.log(e);
                 }
+                element.classList.add("focusBox");
+                this.elementInFocus= element;
+
                 isNumeric = (element.getAttribute('type')=='number')?true:false;
                 if(!isNumeric){
                     keyLayout = [
@@ -185,7 +195,7 @@ Keyboard = {
     },
 
     open(initialValue, oninput, onclose) {
-        this.init();
+        this.refreshButton();
         this.properties.value = initialValue || "";
         this.eventHandlers.oninput = oninput;
         this.eventHandlers.onclose = onclose;
@@ -197,6 +207,8 @@ Keyboard = {
         this.eventHandlers.oninput = oninput;
         this.eventHandlers.onclose = onclose;
         this.elements.main.classList.add("keyboard--hidden");
+        this.elementInFocus.classList.remove("focusBox")
+
     }
 };
 
