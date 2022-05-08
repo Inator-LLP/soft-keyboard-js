@@ -46,6 +46,12 @@ body{
     position: relative;
 }
 
+.numpad {
+    height: 110px;
+    width: 140px;
+    max-width: 125px;
+}
+
 .keyboard__key:active {
     background: rgba(255, 255, 255, 0.12);
 }

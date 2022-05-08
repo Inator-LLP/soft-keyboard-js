@@ -37,9 +37,13 @@ Keyboard = {
         // Setup main elements
         this.elements.main.classList.add("keyboard", "keyboard--hidden");
         this.elements.keysContainer.classList.add("keyboard__keys");
+
         this.elements.keysContainer.appendChild(this._createKeys());
 
         this.elements.keys = this.elements.keysContainer.querySelectorAll(".keyboard__key");
+
+        //added: numpad logic
+        if(isNumeric) this.elements.keys = this.elements.keysContainer.querySelectorAll(".numpad");
 
         // Add to DOM
         this.elements.main.appendChild(this.elements.keysContainer);
@@ -87,7 +91,7 @@ Keyboard = {
 
     _createKeys() {
         const fragment = document.createDocumentFragment();
-        console.log('deciding numeric',isNumeric);
+        // console.log('deciding numeric',isNumeric);
 
         // Creates HTML for an icon
         const createIconHTML = (icon_name) => {
@@ -101,6 +105,9 @@ Keyboard = {
             // Add attributes/classes
             keyElement.setAttribute("type", "button");
             keyElement.classList.add("keyboard__key");
+
+            //added: numpad logic
+            if(isNumeric) keyElement.classList.add("numpad");
 
             switch (key) {
                 case "backspace":
@@ -143,7 +150,6 @@ Keyboard = {
                         this.properties.value += " ";
                         this._triggerEvent("oninput");
                     });
-
                     break;
 
                 case "done":
